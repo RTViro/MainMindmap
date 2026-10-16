@@ -1,0 +1,287 @@
+<title>Mechanical Cost Awareness</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600&family=Barlow:wght@400;500&display=swap">
+<style>
+/* Layout: one fixed-coordinate SVG map (same spatial arrangement as the source mindmap), scrolls sideways on narrow screens */
+:root {
+  --bg: #f4f7f9;
+  --ink: #12202c;
+  --muted: #5a6b79;
+  --blue-fill: #93d0f2;
+  --blue-line: #1d6e9e;
+  --green-fill: #9bd755;
+  --green-line: #3c9528;
+  --amber-fill: #ffc41f;
+  --amber-line: #d42b2b;
+  --arrow: #d82424;
+  --dev-line: #1f9ee6;
+  --dev-label: #17628f;
+  --font-display: "Barlow Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Barlow", "Helvetica Neue", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f171d;
+    --ink: #e8f1f7;
+    --muted: #93a5b3;
+    --blue-fill: #1c4a67;
+    --blue-line: #5db7ea;
+    --green-fill: #2e5a1d;
+    --green-line: #8fd052;
+    --amber-fill: #7d5c00;
+    --amber-line: #ff6d6d;
+    --arrow: #ff5b5b;
+    --dev-line: #3fb0f0;
+    --dev-label: #7cc8f3;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f171d;
+  --ink: #e8f1f7;
+  --muted: #93a5b3;
+  --blue-fill: #1c4a67;
+  --blue-line: #5db7ea;
+  --green-fill: #2e5a1d;
+  --green-line: #8fd052;
+  --amber-fill: #7d5c00;
+  --amber-line: #ff6d6d;
+  --arrow: #ff5b5b;
+  --dev-line: #3fb0f0;
+  --dev-label: #7cc8f3;
+  color-scheme: dark;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  padding-block: 28px 40px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap { max-width: 1480px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(2rem, 4.5vw, 3rem);
+  letter-spacing: 0.01em;
+  text-align: center;
+  text-wrap: balance;
+}
+.hint { margin: 0; text-align: center; color: var(--muted); font-size: 0.875rem; }
+.scroller { overflow-x: auto; }
+svg { display: block; width: 100%; min-width: 980px; height: auto; }
+
+.n rect { stroke-width: 2; transition: opacity .15s; }
+.n text { font-family: var(--font-display); font-weight: 500; font-size: 14px; fill: var(--ink); text-anchor: middle; pointer-events: none; }
+.n.hub rect { stroke-width: 3.2; }
+.n.hub text { font-weight: 600; font-size: 18px; }
+.n.link text { text-decoration: underline; }
+.t-b rect { fill: var(--blue-fill); stroke: var(--blue-line); }
+.t-g rect { fill: var(--green-fill); stroke: var(--green-line); }
+.t-a rect { fill: var(--amber-fill); stroke: var(--amber-line); }
+.n { transition: opacity .15s; cursor: default; }
+.n:focus { outline: none; }
+.n:focus-visible rect { stroke: var(--ink); stroke-width: 3.5; }
+
+.arr { fill: none; stroke: var(--arrow); stroke-width: 1.8; stroke-dasharray: 5 4; transition: opacity .15s; }
+.mk { fill: var(--arrow); }
+.dev { fill: none; stroke: var(--dev-line); stroke-width: 2; stroke-dasharray: 16 11; }
+.dev-bg { fill: var(--bg); }
+.dev-t { font-family: var(--font-display); font-weight: 600; font-size: 19px; text-anchor: middle; }
+.dev-a { fill: var(--dev-label); }
+.dev-b { fill: var(--arrow); }
+
+.dim { opacity: 0.18; }
+.semi { opacity: 0.55; }
+
+@media (prefers-reduced-motion: reduce) {
+  .n, .arr, .n rect { transition: none; }
+}
+</style>
+
+<div class="wrap">
+  <h1>Mechanical Cost Awareness</h1>
+  <p class="hint">Hover or tab to a topic to isolate its branch and the links it shares with other branches.</p>
+  <div class="scroller">
+    <svg id="map" viewBox="0 0 1440 790" role="img" aria-label="Mindmap of mechanical cost awareness: specification, standard components, engineering, manufacturing, raw materials, margin and sales, assembly, integration and project management, with the dependencies between them.">
+      <defs>
+        <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+          <path class="mk" d="M0 0L10 5L0 10z"></path>
+        </marker>
+      </defs>
+      <g id="dev-layer">
+        <rect class="dev" x="35" y="92" width="895" height="438" rx="72"></rect>
+        <rect class="dev-bg" x="296" y="78" width="372" height="26"></rect>
+        <text class="dev-t" x="482" y="97"><tspan class="dev-a">Development </tspan><tspan class="dev-b">90% of the costs are determined here</tspan></text>
+      </g>
+      <g id="arrows"></g>
+      <g id="nodes"></g>
+    </svg>
+  </div>
+</div>
+
+<script>
+(function () {
+  var NS = "http://www.w3.org/2000/svg";
+
+  // [cluster, type (b blue, g green, a amber), kind (hub/leaf), x, y, w, h, label lines, underlined]
+  var nodes = [
+    // Specification
+    ["spec","b","leaf",270,139,142,29,["Challenge"]],
+    ["spec","b","leaf",270,181,142,29,["Problem statement"]],
+    ["spec","b","leaf",270,223,142,29,["Functional fulfillment"]],
+    ["spec","b","hub",423,172,120,50,["Specification"]],
+    ["spec","b","leaf",554,139,120,29,["Completeness"]],
+    ["spec","b","leaf",554,183,120,29,["Feasability"]],
+
+    // Engineering
+    ["eng","g","leaf",534,333,120,29,["Concept design"]],
+    ["eng","g","leaf",664,333,120,29,["TPD"]],
+    ["eng","g","leaf",794,333,120,29,["Review"]],
+    ["eng","g","leaf",534,396,120,29,["Detailed design"]],
+    ["eng","g","hub",664,375,120,50,["Engineering"]],
+    ["eng","g","leaf",794,414,120,29,["Cost estimate"]],
+    ["eng","g","leaf",534,452,120,29,["Basic design"]],
+    ["eng","g","leaf",664,452,120,29,["Sustainability"]],
+    ["eng","g","leaf",794,452,120,29,["Circular design"]],
+
+    // Standard Components
+    ["std","b","leaf",50,342,120,29,["Leadtime"]],
+    ["std","b","leaf",50,396,120,29,["End of Life"]],
+    ["std","b","leaf",50,451,120,29,["Availability"]],
+    ["std","b","hub",182,386,120,50,["Standard","Components"]],
+    ["std","b","leaf",311,343,123,43,["Where to buy /","look"]],
+    ["std","g","leaf",311,400,120,29,["Commonality"]],
+    ["std","g","leaf",182,452,120,29,["Standard parts"]],
+    ["std","b","leaf",311,452,120,29,["Catalogue parts"]],
+
+    // Project Management
+    ["pm","b","hub",1161,145,120,50,["Project","Management"]],
+
+    // Margin / Sales
+    ["margin","g","leaf",1033,270,120,29,["Accuracy"]],
+    ["margin","b","hub",1161,260,120,50,["Margin / Sales"]],
+    ["margin","b","leaf",1289,250,120,29,["Supply chain"]],
+    ["margin","b","leaf",1289,292,120,29,["Batch size"]],
+
+    // Manufacturing
+    ["mfg","b","leaf",1033,387,120,29,["Machine type"]],
+    ["mfg","b","leaf",1161,387,120,29,["Outsourcing"]],
+    ["mfg","b","leaf",1033,428,120,29,["One stop Shop"]],
+    ["mfg","b","leaf",1033,467,120,29,["Quality"]],
+    ["mfg","g","leaf",1033,507,120,29,["Post Treatments"]],
+    ["mfg","b","hub",1161,433,120,50,["Manufacturing"],true],
+    ["mfg","g","leaf",1161,494,120,43,["Machining","techniques"]],
+    ["mfg","g","leaf",1289,427,120,29,["Cleaning"]],
+    ["mfg","g","leaf",1289,467,120,29,["Accuracy"]],
+    ["mfg","b","leaf",1289,507,120,29,["Batch size"]],
+
+    // Raw Materials
+    ["raw","g","leaf",1033,641,120,43,["Purchase","dimensions"]],
+    ["raw","b","leaf",1033,696,120,43,["Availability /","Leadtime"]],
+    ["raw","b","hub",1161,671,120,50,["Raw Materials"]],
+    ["raw","b","leaf",1289,641,120,29,["Batch size"]],
+    ["raw","b","leaf",1289,681,120,29,["Tolerances"]],
+
+    // Assembly
+    ["asm","g","leaf",538,643,122,29,["BOM structure"]],
+    ["asm","g","leaf",538,690,122,39,["Assembly /","Installation"]],
+    ["asm","g","hub",666,661,120,50,["Assembly"]],
+    ["asm","g","leaf",795,644,120,41,["Qualification /","Testing"]],
+    ["asm","g","leaf",795,700,120,29,["Packaging"]],
+
+    // Integration
+    ["int","g","leaf",56,643,120,29,["Safety"]],
+    ["int","a","leaf",56,689,120,29,["CE"]],
+    ["int","a","leaf",56,735,120,29,["Manual"]],
+    ["int","g","hub",185,679,120,50,["Integration"]],
+    ["int","g","leaf",312,643,122,29,["Serviceability"]],
+    ["int","g","leaf",312,684,122,41,["Instruction /","Education"]],
+    ["int","g","leaf",312,735,122,29,["Test plan"]]
+  ];
+
+  // [clusters touched, path, arrowhead at start, arrowhead at end]
+  var arrows = [
+    [["spec","eng"],   "M534 348 H483 V223", true, true],
+    [["std","eng"],    "M434 409 H533", true, true],
+    [["std","eng"],    "M481 409 V467 H533", false, true],
+    [["eng","mfg","margin"], "M787 401 H1032", true, true],
+    [["eng","margin"], "M976 401 V286 H1032", false, true],
+    [["margin","mfg"], "M1221 313 V386", true, true],
+    [["mfg","raw"],    "M1221 540 V670", true, true],
+    [["mfg","raw"],    "M1349 540 V640", true, true],
+    [["eng","raw"],    "M593 483 V599 H1093 V640", true, true],
+    [["int","asm"],    "M436 658 H537", true, true],
+    [["int","asm"],    "M487 658 V709 H537", false, true]
+  ];
+
+  function el(name, attrs, parent) {
+    var e = document.createElementNS(NS, name);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+
+  var arrowLayer = document.getElementById("arrows");
+  var nodeLayer = document.getElementById("nodes");
+  var arrowEls = [];
+  var nodeEls = [];
+
+  arrows.forEach(function (a) {
+    var p = el("path", { "class": "arr", d: a[1] }, arrowLayer);
+    if (a[2]) p.setAttribute("marker-start", "url(#ah)");
+    if (a[3]) p.setAttribute("marker-end", "url(#ah)");
+    arrowEls.push({ el: p, clusters: a[0] });
+  });
+
+  nodes.forEach(function (d) {
+    var hub = d[2] === "hub";
+    var cls = "n t-" + d[1] + (hub ? " hub" : "") + (d[8] ? " link" : "");
+    var g = el("g", { "class": cls }, nodeLayer);
+    if (hub) { g.setAttribute("tabindex", "0"); }
+    el("rect", { x: d[3], y: d[4], width: d[5], height: d[6], rx: hub ? 9 : 7 }, g);
+    var lines = d[7];
+    var fs = hub ? 18 : 14;
+    var lh = hub ? 20 : 15;
+    var cx = d[3] + d[5] / 2;
+    var cy = d[4] + d[6] / 2;
+    var y0 = cy - ((lines.length - 1) * lh) / 2 + fs * 0.34;
+    var t = el("text", { x: cx, y: y0 }, g);
+    lines.forEach(function (ln, i) {
+      var ts = el("tspan", { x: cx, dy: i === 0 ? 0 : lh }, t);
+      ts.textContent = ln;
+    });
+    nodeEls.push({ el: g, cluster: d[0], hub: hub });
+  });
+
+  function focusOn(c) {
+    var linked = {};
+    arrowEls.forEach(function (a) {
+      if (a.clusters.indexOf(c) > -1) a.clusters.forEach(function (x) { linked[x] = true; });
+    });
+    nodeEls.forEach(function (n) {
+      n.el.classList.remove("dim", "semi");
+      if (n.cluster === c) return;
+      if (linked[n.cluster] && n.hub) n.el.classList.add("semi");
+      else n.el.classList.add("dim");
+    });
+    arrowEls.forEach(function (a) {
+      a.el.classList.toggle("dim", a.clusters.indexOf(c) === -1);
+    });
+  }
+  function clearFocus() {
+    nodeEls.forEach(function (n) { n.el.classList.remove("dim", "semi"); });
+    arrowEls.forEach(function (a) { a.el.classList.remove("dim"); });
+  }
+
+  nodeEls.forEach(function (n) {
+    n.el.addEventListener("mouseenter", function () { focusOn(n.cluster); });
+    n.el.addEventListener("mouseleave", clearFocus);
+    n.el.addEventListener("focus", function () { focusOn(n.cluster); });
+    n.el.addEventListener("blur", clearFocus);
+  });
+})();
+</script>
