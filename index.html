@@ -2,53 +2,73 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600&family=Barlow:wght@400;500&display=swap">
 <style>
-/* Layout: one fixed-coordinate SVG map (same spatial arrangement as the source mindmap), scrolls sideways on narrow screens */
+/* Layout: 3x3 grid of equal-width topic panels. Each panel has a bold hub header with pill subtopics beneath.
+   The Development block is an L-shaped dashed outline around Specification, Standard Components and Engineering. */
 :root {
-  --bg: #f4f7f9;
-  --ink: #12202c;
-  --muted: #5a6b79;
-  --blue-fill: #93d0f2;
-  --blue-line: #1d6e9e;
-  --green-fill: #9bd755;
-  --green-line: #3c9528;
-  --amber-fill: #ffc41f;
-  --amber-line: #d42b2b;
-  --arrow: #d82424;
-  --dev-line: #1f9ee6;
-  --dev-label: #17628f;
+  --bg: #edf1f5;
+  --panel: #ffffff;
+  --panel-line: #d3dde7;
+  --ink: #14232f;
+  --muted: #5b6c7a;
+  --blue-chip: #e1f1fb;
+  --blue-chip-line: #74b8e0;
+  --green-chip: #e8f5d9;
+  --green-chip-line: #8ec84e;
+  --amber-chip: #ffe6a0;
+  --amber-chip-line: #d93636;
+  --hub-blue: #1b5f8e;
+  --hub-green: #2d7a24;
+  --hub-ink: #ffffff;
+  --arrow: #d92222;
+  --dev-line: #2a9de0;
+  --dev-fill: rgba(42, 157, 224, 0.07);
+  --dev-a: #16608f;
+  --shadow: drop-shadow(0 1px 1px rgba(20, 40, 60, 0.06)) drop-shadow(0 6px 14px rgba(20, 40, 60, 0.07));
   --font-display: "Barlow Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
   --font-body: "Barlow", "Helvetica Neue", Arial, sans-serif;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0f171d;
-    --ink: #e8f1f7;
-    --muted: #93a5b3;
-    --blue-fill: #1c4a67;
-    --blue-line: #5db7ea;
-    --green-fill: #2e5a1d;
-    --green-line: #8fd052;
-    --amber-fill: #7d5c00;
-    --amber-line: #ff6d6d;
-    --arrow: #ff5b5b;
-    --dev-line: #3fb0f0;
-    --dev-label: #7cc8f3;
+    --bg: #0d141a;
+    --panel: #141e26;
+    --panel-line: #24323d;
+    --ink: #e6eff5;
+    --muted: #8fa2b0;
+    --blue-chip: #1b3a4e;
+    --blue-chip-line: #4ba4d8;
+    --green-chip: #243d1c;
+    --green-chip-line: #7dbd47;
+    --amber-chip: #5a4500;
+    --amber-chip-line: #ff6b6b;
+    --hub-blue: #2a78b0;
+    --hub-green: #3b8a2a;
+    --arrow: #ff5a5a;
+    --dev-line: #44b1f0;
+    --dev-fill: rgba(68, 177, 240, 0.08);
+    --dev-a: #86cdf5;
+    --shadow: none;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0f171d;
-  --ink: #e8f1f7;
-  --muted: #93a5b3;
-  --blue-fill: #1c4a67;
-  --blue-line: #5db7ea;
-  --green-fill: #2e5a1d;
-  --green-line: #8fd052;
-  --amber-fill: #7d5c00;
-  --amber-line: #ff6d6d;
-  --arrow: #ff5b5b;
-  --dev-line: #3fb0f0;
-  --dev-label: #7cc8f3;
+  --bg: #0d141a;
+  --panel: #141e26;
+  --panel-line: #24323d;
+  --ink: #e6eff5;
+  --muted: #8fa2b0;
+  --blue-chip: #1b3a4e;
+  --blue-chip-line: #4ba4d8;
+  --green-chip: #243d1c;
+  --green-chip-line: #7dbd47;
+  --amber-chip: #5a4500;
+  --amber-chip-line: #ff6b6b;
+  --hub-blue: #2a78b0;
+  --hub-green: #3b8a2a;
+  --arrow: #ff5a5a;
+  --dev-line: #44b1f0;
+  --dev-fill: rgba(68, 177, 240, 0.08);
+  --dev-a: #86cdf5;
+  --shadow: none;
   color-scheme: dark;
 }
 
@@ -56,69 +76,82 @@ body {
   background: var(--bg);
   color: var(--ink);
   font-family: var(--font-body);
-  padding-block: 28px 40px;
+  padding-block: 24px 32px;
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
 }
-.wrap { max-width: 1480px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+.wrap { max-width: 1500px; margin: 0 auto; display: flex; flex-direction: column; gap: 6px; }
 h1 {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: clamp(2rem, 4.5vw, 3rem);
+  font-size: clamp(1.9rem, 3.6vw, 2.7rem);
   letter-spacing: 0.01em;
-  text-align: center;
   text-wrap: balance;
 }
-.hint { margin: 0; text-align: center; color: var(--muted); font-size: 0.875rem; }
+.hint { margin: 0 0 8px; color: var(--muted); font-size: 0.875rem; }
 .scroller { overflow-x: auto; }
 svg { display: block; width: 100%; min-width: 980px; height: auto; }
 
-.n rect { stroke-width: 2; transition: opacity .15s; }
-.n text { font-family: var(--font-display); font-weight: 500; font-size: 14px; fill: var(--ink); text-anchor: middle; pointer-events: none; }
-.n.hub rect { stroke-width: 3.2; }
-.n.hub text { font-weight: 600; font-size: 18px; }
-.n.link text { text-decoration: underline; }
-.t-b rect { fill: var(--blue-fill); stroke: var(--blue-line); }
-.t-g rect { fill: var(--green-fill); stroke: var(--green-line); }
-.t-a rect { fill: var(--amber-fill); stroke: var(--amber-line); }
-.n { transition: opacity .15s; cursor: default; }
-.n:focus { outline: none; }
-.n:focus-visible rect { stroke: var(--ink); stroke-width: 3.5; }
+.cl { transition: opacity 0.15s; }
+.panel { fill: var(--panel); stroke: var(--panel-line); stroke-width: 1.5; filter: var(--shadow); }
+.hub rect { stroke: none; }
+.hub.t-b rect { fill: var(--hub-blue); }
+.hub.t-g rect { fill: var(--hub-green); }
+.hub:focus { outline: none; }
+.hub:focus-visible rect { stroke: var(--ink); stroke-width: 3; }
+.hub-t {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 21px;
+  letter-spacing: 0.06em;
+  fill: var(--hub-ink);
+  text-anchor: middle;
+  pointer-events: none;
+}
+.chip rect { stroke-width: 1.8; }
+.chip.t-b rect { fill: var(--blue-chip); stroke: var(--blue-chip-line); }
+.chip.t-g rect { fill: var(--green-chip); stroke: var(--green-chip-line); }
+.chip.t-a rect { fill: var(--amber-chip); stroke: var(--amber-chip-line); stroke-width: 2.2; }
+.chip:hover rect { stroke-width: 2.6; }
+.chip-t {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 16px;
+  fill: var(--ink);
+  text-anchor: middle;
+  pointer-events: none;
+}
 
-.arr { fill: none; stroke: var(--arrow); stroke-width: 1.8; stroke-dasharray: 5 4; transition: opacity .15s; }
+.arr { fill: none; stroke: var(--arrow); stroke-width: 2; stroke-dasharray: 6 5; stroke-linejoin: round; transition: opacity 0.15s; }
 .mk { fill: var(--arrow); }
-.dev { fill: none; stroke: var(--dev-line); stroke-width: 2; stroke-dasharray: 16 11; }
+.dev { fill: var(--dev-fill); stroke: var(--dev-line); stroke-width: 2; stroke-dasharray: 16 11; }
 .dev-bg { fill: var(--bg); }
 .dev-t { font-family: var(--font-display); font-weight: 600; font-size: 19px; text-anchor: middle; }
-.dev-a { fill: var(--dev-label); }
+.dev-a { fill: var(--dev-a); }
 .dev-b { fill: var(--arrow); }
 
-.dim { opacity: 0.18; }
-.semi { opacity: 0.55; }
+.dim { opacity: 0.16; }
+.semi { opacity: 0.5; }
 
 @media (prefers-reduced-motion: reduce) {
-  .n, .arr, .n rect { transition: none; }
+  .cl, .arr { transition: none; }
 }
 </style>
 
 <div class="wrap">
   <h1>Mechanical Cost Awareness</h1>
-  <p class="hint">Hover or tab to a topic to isolate its branch and the links it shares with other branches.</p>
+  <p class="hint">Hover or tab to a topic to isolate it and the links it shares with other topics.</p>
   <div class="scroller">
-    <svg id="map" viewBox="0 0 1440 790" role="img" aria-label="Mindmap of mechanical cost awareness: specification, standard components, engineering, manufacturing, raw materials, margin and sales, assembly, integration and project management, with the dependencies between them.">
+    <svg id="map" viewBox="0 0 1398 888" role="img" aria-label="Mindmap of mechanical cost awareness with nine main topics: project management, specification, margin and sales, standard components, engineering, manufacturing, integration, assembly and raw materials, plus the dependencies between them.">
       <defs>
-        <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+        <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
           <path class="mk" d="M0 0L10 5L0 10z"></path>
         </marker>
       </defs>
-      <g id="dev-layer">
-        <rect class="dev" x="35" y="92" width="895" height="438" rx="72"></rect>
-        <rect class="dev-bg" x="296" y="78" width="372" height="26"></rect>
-        <text class="dev-t" x="482" y="97"><tspan class="dev-a">Development </tspan><tspan class="dev-b">90% of the costs are determined here</tspan></text>
-      </g>
+      <g id="region"></g>
+      <g id="clusters"></g>
       <g id="arrows"></g>
-      <g id="nodes"></g>
     </svg>
   </div>
 </div>
@@ -126,97 +159,75 @@ svg { display: block; width: 100%; min-width: 980px; height: auto; }
 <script>
 (function () {
   var NS = "http://www.w3.org/2000/svg";
+  var G = { chipW: 176, chipH: 36, vGap: 10, hGap: 10, pad: 12, hubH: 54, hubGap: 14, gapX: 84, gapY: 44, x0: 32, y0: 24, reg: 12 };
+  G.panelW = G.pad * 2 + G.chipW * 2 + G.hGap;
+  G.pitch = G.chipH + G.vGap;
 
-  // [cluster, type (b blue, g green, a amber), kind (hub/leaf), x, y, w, h, label lines, underlined]
-  var nodes = [
-    // Specification
-    ["spec","b","leaf",270,139,142,29,["Challenge"]],
-    ["spec","b","leaf",270,181,142,29,["Problem statement"]],
-    ["spec","b","leaf",270,223,142,29,["Functional fulfillment"]],
-    ["spec","b","hub",423,172,120,50,["Specification"]],
-    ["spec","b","leaf",554,139,120,29,["Completeness"]],
-    ["spec","b","leaf",554,183,120,29,["Feasability"]],
-
-    // Engineering
-    ["eng","g","leaf",534,333,120,29,["Concept design"]],
-    ["eng","g","leaf",664,333,120,29,["TPD"]],
-    ["eng","g","leaf",794,333,120,29,["Review"]],
-    ["eng","g","leaf",534,396,120,29,["Detailed design"]],
-    ["eng","g","hub",664,375,120,50,["Engineering"]],
-    ["eng","g","leaf",794,414,120,29,["Cost estimate"]],
-    ["eng","g","leaf",534,452,120,29,["Basic design"]],
-    ["eng","g","leaf",664,452,120,29,["Sustainability"]],
-    ["eng","g","leaf",794,452,120,29,["Circular design"]],
-
-    // Standard Components
-    ["std","b","leaf",50,342,120,29,["Leadtime"]],
-    ["std","b","leaf",50,396,120,29,["End of Life"]],
-    ["std","b","leaf",50,451,120,29,["Availability"]],
-    ["std","b","hub",182,386,120,50,["Standard","Components"]],
-    ["std","b","leaf",311,343,123,43,["Where to buy /","look"]],
-    ["std","g","leaf",311,400,120,29,["Commonality"]],
-    ["std","g","leaf",182,452,120,29,["Standard parts"]],
-    ["std","b","leaf",311,452,120,29,["Catalogue parts"]],
-
-    // Project Management
-    ["pm","b","hub",1161,145,120,50,["Project","Management"]],
-
-    // Margin / Sales
-    ["margin","g","leaf",1033,270,120,29,["Accuracy"]],
-    ["margin","b","hub",1161,260,120,50,["Margin / Sales"]],
-    ["margin","b","leaf",1289,250,120,29,["Supply chain"]],
-    ["margin","b","leaf",1289,292,120,29,["Batch size"]],
-
-    // Manufacturing
-    ["mfg","b","leaf",1033,387,120,29,["Machine type"]],
-    ["mfg","b","leaf",1161,387,120,29,["Outsourcing"]],
-    ["mfg","b","leaf",1033,428,120,29,["One stop Shop"]],
-    ["mfg","b","leaf",1033,467,120,29,["Quality"]],
-    ["mfg","g","leaf",1033,507,120,29,["Post Treatments"]],
-    ["mfg","b","hub",1161,433,120,50,["Manufacturing"],true],
-    ["mfg","g","leaf",1161,494,120,43,["Machining","techniques"]],
-    ["mfg","g","leaf",1289,427,120,29,["Cleaning"]],
-    ["mfg","g","leaf",1289,467,120,29,["Accuracy"]],
-    ["mfg","b","leaf",1289,507,120,29,["Batch size"]],
-
-    // Raw Materials
-    ["raw","g","leaf",1033,641,120,43,["Purchase","dimensions"]],
-    ["raw","b","leaf",1033,696,120,43,["Availability /","Leadtime"]],
-    ["raw","b","hub",1161,671,120,50,["Raw Materials"]],
-    ["raw","b","leaf",1289,641,120,29,["Batch size"]],
-    ["raw","b","leaf",1289,681,120,29,["Tolerances"]],
-
-    // Assembly
-    ["asm","g","leaf",538,643,122,29,["BOM structure"]],
-    ["asm","g","leaf",538,690,122,39,["Assembly /","Installation"]],
-    ["asm","g","hub",666,661,120,50,["Assembly"]],
-    ["asm","g","leaf",795,644,120,41,["Qualification /","Testing"]],
-    ["asm","g","leaf",795,700,120,29,["Packaging"]],
-
-    // Integration
-    ["int","g","leaf",56,643,120,29,["Safety"]],
-    ["int","a","leaf",56,689,120,29,["CE"]],
-    ["int","a","leaf",56,735,120,29,["Manual"]],
-    ["int","g","hub",185,679,120,50,["Integration"]],
-    ["int","g","leaf",312,643,122,29,["Serviceability"]],
-    ["int","g","leaf",312,684,122,41,["Instruction /","Education"]],
-    ["int","g","leaf",312,735,122,29,["Test plan"]]
+  // chip = [column (0 left, 1 right), row (1-based), label, type (b blue, g green, a amber), optional id]
+  var panels = [
+    { key: "pm", col: 0, row: 0, hub: "Project Management", type: "b", stretch: false, chips: [] },
+    { key: "spec", col: 1, row: 0, hub: "Specification", type: "b", chips: [
+      [0,1,"Challenge","b"], [0,2,"Problem statement","b"], [0,3,"Functional fulfillment","b"],
+      [1,1,"Completeness","b"], [1,2,"Feasability","b"] ] },
+    { key: "margin", col: 2, row: 0, hub: "Margin / Sales", type: "b", chips: [
+      [0,1,"Accuracy","g","acc1"],
+      [1,1,"Supply chain","b"], [1,2,"Batch size","b"] ] },
+    { key: "std", col: 0, row: 1, hub: "Standard Components", type: "b", chips: [
+      [0,1,"Leadtime","b"], [0,2,"End of Life","b"], [0,3,"Availability","b"], [0,4,"Standard parts","g"],
+      [1,1,"Where to buy / look","b"], [1,2,"Commonality","g","commonality"], [1,3,"Catalogue parts","b"] ] },
+    { key: "eng", col: 1, row: 1, hub: "Engineering", type: "g", chips: [
+      [0,1,"Concept design","g","concept"], [0,2,"Detailed design","g","detailed"], [0,3,"Basic design","g","basic"],
+      [1,1,"TPD","g"], [1,2,"Review","g"], [1,3,"Cost estimate","g"], [1,4,"Sustainability","g"], [1,5,"Circular design","g"] ] },
+    { key: "mfg", col: 2, row: 1, hub: "Manufacturing", type: "b", chips: [
+      [0,1,"Machine type","b","machine"], [0,2,"One stop Shop","b"], [0,3,"Quality","b"], [0,4,"Post Treatments","g"], [0,5,"Machining techniques","g","machining"],
+      [1,1,"Outsourcing","b","outsourcing"], [1,2,"Cleaning","g"], [1,3,"Accuracy","g"], [1,4,"Batch size","b","batch_m"] ] },
+    { key: "int", col: 0, row: 2, hub: "Integration", type: "g", chips: [
+      [0,1,"Safety","g"], [0,2,"CE","a"], [0,3,"Manual","a"],
+      [1,1,"Serviceability","g","serv"], [1,2,"Instruction / Education","g"], [1,3,"Test plan","g"] ] },
+    { key: "asm", col: 1, row: 2, hub: "Assembly", type: "g", chips: [
+      [0,1,"BOM structure","g","bom"], [0,2,"Assembly / Installation","g","install"],
+      [1,1,"Qualification / Testing","g"], [1,2,"Packaging","g"] ] },
+    { key: "raw", col: 2, row: 2, hub: "Raw Materials", type: "b", chips: [
+      [0,1,"Purchase dimensions","g","purchase"], [0,2,"Availability / Leadtime","b"],
+      [1,1,"Batch size","b","batch_r"], [1,2,"Tolerances","b"] ] }
   ];
 
-  // [clusters touched, path, arrowhead at start, arrowhead at end]
-  var arrows = [
-    [["spec","eng"],   "M534 348 H483 V223", true, true],
-    [["std","eng"],    "M434 409 H533", true, true],
-    [["std","eng"],    "M481 409 V467 H533", false, true],
-    [["eng","mfg","margin"], "M787 401 H1032", true, true],
-    [["eng","margin"], "M976 401 V286 H1032", false, true],
-    [["margin","mfg"], "M1221 313 V386", true, true],
-    [["mfg","raw"],    "M1221 540 V670", true, true],
-    [["mfg","raw"],    "M1349 540 V640", true, true],
-    [["eng","raw"],    "M593 483 V599 H1093 V640", true, true],
-    [["int","asm"],    "M436 658 H537", true, true],
-    [["int","asm"],    "M487 658 V709 H537", false, true]
-  ];
+  // ---- geometry ----
+  var rowH = [0, 0, 0];
+  panels.forEach(function (p) {
+    var n = 0;
+    p.chips.forEach(function (c) { if (c[1] > n) n = c[1]; });
+    p.nat = n === 0 ? G.pad * 2 + G.hubH : G.pad * 2 + G.hubH + G.hubGap + n * G.chipH + (n - 1) * G.vGap;
+    if (p.stretch !== false && p.nat > rowH[p.row]) rowH[p.row] = p.nat;
+  });
+  var colX = [0, 1, 2].map(function (i) { return G.x0 + i * (G.panelW + G.gapX); });
+  var rowY = [G.y0];
+  rowY[1] = rowY[0] + rowH[0] + G.gapY;
+  rowY[2] = rowY[1] + rowH[1] + G.gapY;
+  var W = colX[2] + G.panelW + 40;
+  var H = rowY[2] + rowH[2] + G.y0;
+
+  var P = {}, K = {};
+  panels.forEach(function (p) {
+    p.x = colX[p.col];
+    p.y = rowY[p.row];
+    p.w = G.panelW;
+    p.h = p.stretch === false ? p.nat : rowH[p.row];
+    p.hubBox = { x: p.x + G.pad, y: p.y + G.pad, w: p.w - 2 * G.pad, h: G.hubH };
+    P[p.key] = p;
+    p.chips.forEach(function (c) {
+      c.box = {
+        x: p.x + G.pad + c[0] * (G.chipW + G.hGap),
+        y: p.y + G.pad + G.hubH + G.hubGap + (c[1] - 1) * G.pitch,
+        w: G.chipW,
+        h: G.chipH
+      };
+      if (c[4]) K[c[4]] = c.box;
+    });
+  });
+
+  var svg = document.getElementById("map");
+  svg.setAttribute("viewBox", "0 0 " + W + " " + H);
 
   function el(name, attrs, parent) {
     var e = document.createElementNS(NS, name);
@@ -225,63 +236,154 @@ svg { display: block; width: 100%; min-width: 980px; height: auto; }
     return e;
   }
 
-  var arrowLayer = document.getElementById("arrows");
-  var nodeLayer = document.getElementById("nodes");
-  var arrowEls = [];
-  var nodeEls = [];
+  // ---- development region (L-shaped dashed outline) ----
+  function roundedPath(pts, r) {
+    var n = pts.length, d = "";
+    var a = [], b = [];
+    for (var i = 0; i < n; i++) {
+      var p0 = pts[(i + n - 1) % n], p1 = pts[i], p2 = pts[(i + 1) % n];
+      function toward(from, to) {
+        var dx = to[0] - from[0], dy = to[1] - from[1];
+        var len = Math.sqrt(dx * dx + dy * dy);
+        var t = Math.min(r, len / 2) / len;
+        return [from[0] + dx * t, from[1] + dy * t];
+      }
+      a.push(toward(p1, p0));
+      b.push(toward(p1, p2));
+    }
+    d = "M" + a[0][0] + " " + a[0][1];
+    for (var j = 0; j < n; j++) {
+      if (j > 0) d += " L" + a[j][0] + " " + a[j][1];
+      d += " Q" + pts[j][0] + " " + pts[j][1] + " " + b[j][0] + " " + b[j][1];
+    }
+    return d + " Z";
+  }
+  var xA = colX[0], xB = colX[1], xC = colX[2];
+  var d0 = G.reg;
+  var y1 = rowY[0], y2 = rowY[1], yBottom = rowY[1] + rowH[1];
+  var rightB = xB + G.panelW;
+  var regionLayer = document.getElementById("region");
+  el("path", {
+    "class": "dev",
+    d: roundedPath([
+      [xB - d0, y1 - d0], [rightB + d0, y1 - d0], [rightB + d0, yBottom + d0],
+      [xA - d0, yBottom + d0], [xA - d0, y2 - d0], [xB - d0, y2 - d0]
+    ], 30)
+  }, regionLayer);
+  var labelX = xA + 190, labelY = y2 - d0;
+  var labelBg = el("rect", { "class": "dev-bg", x: labelX - 190, y: labelY - 13, width: 380, height: 26, rx: 4 }, regionLayer);
+  var label = el("text", { "class": "dev-t", x: labelX, y: labelY + 6 }, regionLayer);
+  var la = el("tspan", { "class": "dev-a" }, label); la.textContent = "Development ";
+  var lb = el("tspan", { "class": "dev-b" }, label); lb.textContent = "90% of the costs are determined here";
 
-  arrows.forEach(function (a) {
+  // ---- panels, hubs and chips ----
+  var clusterLayer = document.getElementById("clusters");
+  var fitList = [];
+  var clusters = {};
+  panels.forEach(function (p) {
+    var g = el("g", { "class": "cl", "data-c": p.key }, clusterLayer);
+    clusters[p.key] = g;
+    el("rect", { "class": "panel", x: p.x, y: p.y, width: p.w, height: p.h, rx: 22 }, g);
+
+    var hb = p.hubBox;
+    var hg = el("g", { "class": "hub t-" + p.type, tabindex: "0", role: "group", "aria-label": p.hub }, g);
+    el("rect", { x: hb.x, y: hb.y, width: hb.w, height: hb.h, rx: 14 }, hg);
+    var ht = el("text", { "class": "hub-t", x: hb.x + hb.w / 2, y: hb.y + hb.h / 2, dy: "0.34em" }, hg);
+    ht.textContent = p.hub.toUpperCase();
+    fitList.push([ht, hb.w - 28]);
+
+    p.chips.forEach(function (c) {
+      var b = c.box;
+      var cg = el("g", { "class": "chip t-" + c[3] }, g);
+      el("rect", { x: b.x, y: b.y, width: b.w, height: b.h, rx: b.h / 2 }, cg);
+      var t = el("text", { "class": "chip-t", x: b.x + b.w / 2, y: b.y + b.h / 2, dy: "0.34em" }, cg);
+      t.textContent = c[2];
+      fitList.push([t, b.w - 24]);
+    });
+  });
+
+  // ---- arrows ----
+  function Lm(b) { return { x: b.x, y: b.y + b.h / 2 }; }
+  function Rm(b) { return { x: b.x + b.w, y: b.y + b.h / 2 }; }
+  function Bm(b) { return { x: b.x + b.w / 2, y: b.y + b.h }; }
+
+  var laneS = xB - 40, laneC = xB - 62, laneI = xB - 48;
+  var laneH = xC - 42, laneR = xC + G.panelW + 20;
+  var yGap = P.eng.y + P.eng.h + G.gapY / 2;
+
+  var cn = Lm(K.concept), sp = Lm(P.spec.hubBox);
+  var cm = Rm(K.commonality), dt = Lm(K.detailed), bs = Lm(K.basic);
+  var eh = Rm(P.eng.hubBox), mt = Lm(K.machine), ac = Lm(K.acc1);
+  var mh = Rm(P.margin.hubBox), os = Rm(K.outsourcing);
+  var mc = Bm(K.machining), rh = P.raw.hubBox;
+  var bm = Rm(K.batch_m), br = Rm(K.batch_r);
+  var bb = Bm(K.basic), pu = Lm(K.purchase);
+  var sv = Rm(K.serv), bo = Lm(K.bom), ins = Lm(K.install);
+
+  // [clusters touched, path, arrowhead at start, arrowhead at end]
+  var arrows = [
+    [["spec","eng"], "M" + cn.x + " " + cn.y + " H" + laneS + " V" + sp.y + " H" + sp.x, true, true],
+    [["std","eng"], "M" + cm.x + " " + cm.y + " H" + dt.x, true, true],
+    [["std","eng"], "M" + laneC + " " + cm.y + " V" + bs.y + " H" + bs.x, false, true],
+    [["eng","mfg","margin"], "M" + eh.x + " " + eh.y + " H" + laneH + " V" + mt.y + " H" + mt.x, true, true],
+    [["eng","margin"], "M" + laneH + " " + eh.y + " V" + ac.y + " H" + ac.x, false, true],
+    [["margin","mfg"], "M" + mh.x + " " + mh.y + " H" + laneR + " V" + os.y + " H" + os.x, true, true],
+    [["mfg","raw"], "M" + mc.x + " " + mc.y + " V" + rh.y, true, true],
+    [["mfg","raw"], "M" + bm.x + " " + bm.y + " H" + laneR + " V" + br.y + " H" + br.x, true, true],
+    [["eng","raw"], "M" + bb.x + " " + bb.y + " V" + yGap + " H" + laneH + " V" + pu.y + " H" + pu.x, true, true],
+    [["int","asm"], "M" + sv.x + " " + sv.y + " H" + bo.x, true, true],
+    [["int","asm"], "M" + laneI + " " + sv.y + " V" + ins.y + " H" + ins.x, false, true]
+  ];
+  var arrowLayer = document.getElementById("arrows");
+  var arrowEls = arrows.map(function (a) {
     var p = el("path", { "class": "arr", d: a[1] }, arrowLayer);
     if (a[2]) p.setAttribute("marker-start", "url(#ah)");
     if (a[3]) p.setAttribute("marker-end", "url(#ah)");
-    arrowEls.push({ el: p, clusters: a[0] });
+    return { el: p, clusters: a[0] };
   });
 
-  nodes.forEach(function (d) {
-    var hub = d[2] === "hub";
-    var cls = "n t-" + d[1] + (hub ? " hub" : "") + (d[8] ? " link" : "");
-    var g = el("g", { "class": cls }, nodeLayer);
-    if (hub) { g.setAttribute("tabindex", "0"); }
-    el("rect", { x: d[3], y: d[4], width: d[5], height: d[6], rx: hub ? 9 : 7 }, g);
-    var lines = d[7];
-    var fs = hub ? 18 : 14;
-    var lh = hub ? 20 : 15;
-    var cx = d[3] + d[5] / 2;
-    var cy = d[4] + d[6] / 2;
-    var y0 = cy - ((lines.length - 1) * lh) / 2 + fs * 0.34;
-    var t = el("text", { x: cx, y: y0 }, g);
-    lines.forEach(function (ln, i) {
-      var ts = el("tspan", { x: cx, dy: i === 0 ? 0 : lh }, t);
-      ts.textContent = ln;
+  // ---- text fitting (long labels shrink instead of overflowing) ----
+  function fitAll() {
+    fitList.forEach(function (f) {
+      var t = f[0];
+      t.style.fontSize = "";
+      var len = t.getComputedTextLength();
+      if (len > f[1]) {
+        var fs = parseFloat(getComputedStyle(t).fontSize);
+        t.style.fontSize = (fs * f[1] / len).toFixed(2) + "px";
+      }
     });
-    nodeEls.push({ el: g, cluster: d[0], hub: hub });
-  });
+    var w = label.getComputedTextLength() + 24;
+    labelBg.setAttribute("width", w);
+    labelBg.setAttribute("x", labelX - w / 2);
+  }
+  fitAll();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitAll);
 
+  // ---- hover / focus highlighting ----
   function focusOn(c) {
     var linked = {};
     arrowEls.forEach(function (a) {
       if (a.clusters.indexOf(c) > -1) a.clusters.forEach(function (x) { linked[x] = true; });
     });
-    nodeEls.forEach(function (n) {
-      n.el.classList.remove("dim", "semi");
-      if (n.cluster === c) return;
-      if (linked[n.cluster] && n.hub) n.el.classList.add("semi");
-      else n.el.classList.add("dim");
+    Object.keys(clusters).forEach(function (k) {
+      var g = clusters[k];
+      g.classList.remove("dim", "semi");
+      if (k === c) return;
+      g.classList.add(linked[k] ? "semi" : "dim");
     });
-    arrowEls.forEach(function (a) {
-      a.el.classList.toggle("dim", a.clusters.indexOf(c) === -1);
-    });
+    arrowEls.forEach(function (a) { a.el.classList.add("dim"); });
   }
   function clearFocus() {
-    nodeEls.forEach(function (n) { n.el.classList.remove("dim", "semi"); });
+    Object.keys(clusters).forEach(function (k) { clusters[k].classList.remove("dim", "semi"); });
     arrowEls.forEach(function (a) { a.el.classList.remove("dim"); });
   }
-
-  nodeEls.forEach(function (n) {
-    n.el.addEventListener("mouseenter", function () { focusOn(n.cluster); });
-    n.el.addEventListener("mouseleave", clearFocus);
-    n.el.addEventListener("focus", function () { focusOn(n.cluster); });
-    n.el.addEventListener("blur", clearFocus);
+  Object.keys(clusters).forEach(function (k) {
+    var g = clusters[k];
+    g.addEventListener("mouseenter", function () { focusOn(k); });
+    g.addEventListener("mouseleave", clearFocus);
+    g.addEventListener("focusin", function () { focusOn(k); });
+    g.addEventListener("focusout", clearFocus);
   });
 })();
 </script>
