@@ -106,6 +106,7 @@ svg { display: block; width: 100%; height: 100%; min-width: 980px; }
 .hub.t-b rect { fill: var(--hub-blue); }
 .hub.t-g rect { fill: var(--hub-green); }
 .hub:focus { outline: none; }
+.hub { cursor: pointer; }
 .hub:focus-visible rect { stroke: var(--ink); stroke-width: 3; }
 .hub-t {
   font-family: var(--font-display);
@@ -200,6 +201,19 @@ svg { display: block; width: 100%; height: 100%; min-width: 980px; }
       [0,1,"Purchase dimensions","g","purchase"], [0,2,"Availability / Leadtime","b"],
       [1,1,"Batch size","b","batch_r"], [1,2,"Tolerances","b"] ] }
   ];
+
+  // SharePoint pages opened when a main topic hub is clicked.
+  var topicLinks = {
+  "asm": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Assembly.aspx?d=wcbcc2b28a6db40348b59d6da6e89caa8&csf=1&web=2&share=IQAoK8zL26Y0QItZ1tpuicqoARDc7wng60xnXnS7swAtNzI&e=CehAcc",
+  "eng": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Engineering.aspx?d=wb2bfe30543f84c96b83919e9f7f8fb48&csf=1&web=2&share=IQAF47-y-EOWTLg5Gen3-PtIAaVA-08TVqFQxi3dg1lxCp8&e=wgADZK",
+  "int": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Integration.aspx?d=web1af19cfa3d4787b3bbdddf9f650420&csf=1&web=2&share=IQCc8RrrPfqHR7O73d-fZQQgARnao4Jc7AQ-khSwYX9gd-Y&e=ROvQKI",
+  "mfg": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Manufacturing.aspx?d=wa8c3e1eac719414b8ae2242cb4fc2dec&csf=1&web=2&share=IQDq4cOoGcdLQYriJCy0_C3sAU_-A-4tj56gI3DLivL9Wss&e=DhoUJF",
+  "pm": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Project%20Management.aspx?d=wba7df0e78530452288764c6b0cc17390&csf=1&web=2&share=IQDn8H26MIUiRYh2TGsMwXOQAWflsh5hC29npvV_d6AGfBk&e=4IHBko",
+  "raw": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Raw%20Materials.aspx?d=wfe7455ea9f1b4436a745bc42dd5cc4ab&csf=1&web=2&share=IQDqVXT-G582RKdFvELdXMSrASWpErWLiDXYWBP3AzwjFWg&e=fGdefI",
+  "margin": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Sales%20Margin.aspx?d=w730cdf7f994446eebd62bacef67d9814&csf=1&web=2&share=IQB_3wxzRJnuRr1ius72fZgUAZw2Y4XQPsfoXPGwUHpRj3I&e=YkpCgY",
+  "spec": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Specification.aspx?d=w14a7981855534ac4a195966e87745b72&csf=1&web=2&share=IQAYmKcUU1XESqGVlm6HdFtyAZ-DYn8fH1Aj1ZpayevJYp4&e=7N8PCl",
+  "std": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Standard%20Components.aspx?d=we756d0e5345841528781cd4b1a26e8e6&csf=1&web=2&share=IQDl0FbnWDRSQYeBzUsaJujmAWKoW0WEkf5WF8WbKWBnmAc&e=fxNsNP"
+};
 
   // ---- geometry ----
   var rowH = [0, 0, 0];
@@ -299,6 +313,18 @@ svg { display: block; width: 100%; height: 100%; min-width: 980px; }
     el("rect", { x: hb.x, y: hb.y, width: hb.w, height: hb.h, rx: 14 }, hg);
     var ht = el("text", { "class": "hub-t", x: hb.x + hb.w / 2, y: hb.y + hb.h / 2, dy: "0.34em" }, hg);
     ht.textContent = p.hub.toUpperCase();
+    if (topicLinks[p.key]) {
+      hg.setAttribute("aria-haspopup", "true");
+      hg.addEventListener("click", function () {
+        window.open(topicLinks[p.key], "_blank", "noopener,noreferrer");
+      });
+      hg.addEventListener("keydown", function (event) {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          window.open(topicLinks[p.key], "_blank", "noopener,noreferrer");
+        }
+      });
+    }
     fitList.push([ht, hb.w - 28]);
 
     p.chips.forEach(function (c) {
