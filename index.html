@@ -114,6 +114,9 @@ svg { display: block; width: 100%; height: 100%; min-width: 980px; }
 }
 .chip rect { stroke-width: 1.8; }
 .chip rect { fill: var(--tint); stroke: var(--edge); }
+.chip.link { cursor: pointer; }
+.chip.link:focus { outline: none; }
+.chip.link:focus-visible rect { stroke: var(--ink); stroke-width: 3; }
 .chip:hover rect { stroke-width: 2.6; }
 .chip-t {
   font-family: var(--font-display);
@@ -197,16 +200,45 @@ svg { display: block; width: 100%; height: 100%; min-width: 980px; }
 
   // SharePoint pages opened when a main topic hub is clicked.
   var topicLinks = {
-  "asm": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Assembly.aspx?d=wcbcc2b28a6db40348b59d6da6e89caa8&csf=1&web=2&share=IQAoK8zL26Y0QItZ1tpuicqoARDc7wng60xnXnS7swAtNzI&e=CehAcc",
-  "eng": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Engineering.aspx?d=wb2bfe30543f84c96b83919e9f7f8fb48&csf=1&web=2&share=IQAF47-y-EOWTLg5Gen3-PtIAaVA-08TVqFQxi3dg1lxCp8&e=wgADZK",
-  "int": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Integration.aspx?d=web1af19cfa3d4787b3bbdddf9f650420&csf=1&web=2&share=IQCc8RrrPfqHR7O73d-fZQQgARnao4Jc7AQ-khSwYX9gd-Y&e=ROvQKI",
-  "mfg": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Manufacturing.aspx?d=wa8c3e1eac719414b8ae2242cb4fc2dec&csf=1&web=2&share=IQDq4cOoGcdLQYriJCy0_C3sAU_-A-4tj56gI3DLivL9Wss&e=DhoUJF",
-  "pm": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Project%20Management.aspx?d=wba7df0e78530452288764c6b0cc17390&csf=1&web=2&share=IQDn8H26MIUiRYh2TGsMwXOQAWflsh5hC29npvV_d6AGfBk&e=4IHBko",
-  "raw": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Raw%20Materials.aspx?d=wfe7455ea9f1b4436a745bc42dd5cc4ab&csf=1&web=2&share=IQDqVXT-G582RKdFvELdXMSrASWpErWLiDXYWBP3AzwjFWg&e=fGdefI",
-  "margin": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Sales%20Margin.aspx?d=w730cdf7f994446eebd62bacef67d9814&csf=1&web=2&share=IQB_3wxzRJnuRr1ius72fZgUAZw2Y4XQPsfoXPGwUHpRj3I&e=YkpCgY",
-  "spec": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Specification.aspx?d=w14a7981855534ac4a195966e87745b72&csf=1&web=2&share=IQAYmKcUU1XESqGVlm6HdFtyAZ-DYn8fH1Aj1ZpayevJYp4&e=7N8PCl",
-  "std": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Standard%20Components.aspx?d=we756d0e5345841528781cd4b1a26e8e6&csf=1&web=2&share=IQDl0FbnWDRSQYeBzUsaJujmAWKoW0WEkf5WF8WbKWBnmAc&e=fxNsNP"
+  "asm": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Assembly.aspx?d=wcbcc2b28a6db40348b59d6da6e89caa8&csf=1&web=2&share=IQAoK8zL26Y0QItZ1tpuicqoAb8dHDQ3meqtV4X2oNTrYH0&e=11jCeZ",
+  "eng": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Engineering.aspx?d=wb2bfe30543f84c96b83919e9f7f8fb48&csf=1&web=2&share=IQAF47-y-EOWTLg5Gen3-PtIAaVA-08TVqFQxi3dg1lxCp8&e=nmrgtk",
+  "int": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Integration.aspx?d=web1af19cfa3d4787b3bbdddf9f650420&csf=1&web=2&share=IQCc8RrrPfqHR7O73d-fZQQgARnao4Jc7AQ-khSwYX9gd-Y&e=duGthC",
+  "margin": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Sales%20Margin.aspx?d=w730cdf7f994446eebd62bacef67d9814&csf=1&web=2&share=IQB_3wxzRJnuRr1ius72fZgUAZw2Y4XQPsfoXPGwUHpRj3I&e=SGAdhb",
+  "mfg": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Manufacturing.aspx?d=wa8c3e1eac719414b8ae2242cb4fc2dec&csf=1&web=2&share=IQDq4cOoGcdLQYriJCy0_C3sAU_-A-4tj56gI3DLivL9Wss&e=qtFj10",
+  "pm": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Project%20Management.aspx?d=wba7df0e78530452288764c6b0cc17390&csf=1&web=2&share=IQDn8H26MIUiRYh2TGsMwXOQAWflsh5hC29npvV_d6AGfBk&e=RiCCBd",
+  "raw": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Raw%20Materials.aspx?d=wfe7455ea9f1b4436a745bc42dd5cc4ab&csf=1&web=2&share=IQDqVXT-G582RKdFvELdXMSrASWpErWLiDXYWBP3AzwjFWg&e=MMQbXe",
+  "spec": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Specification.aspx?d=w14a7981855534ac4a195966e87745b72&csf=1&web=2&share=IQAYmKcUU1XESqGVlm6HdFtyAZ-DYn8fH1Aj1ZpayevJYp4&e=YdyyBM",
+  "std": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Standard%20Components.aspx?d=we756d0e5345841528781cd4b1a26e8e6&csf=1&web=2&share=IQDl0FbnWDRSQYeBzUsaJujmAWKoW0WEkf5WF8WbKWBnmAc&e=G7KIHI"
 };
+
+  // Subtopic pages opened when a pill is clicked, keyed by "panel|label". Pills without an entry are not clickable yet.
+  var chipLinks = {
+  "std|Availability and suppliers": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Availability%20and%20Suppliers.aspx?d=w39c4246404ec4b4c8d296a9a00917dbb&csf=1&web=2&share=IQBkJMQ57ARMS40papoAkX27AcJElu0XlCYtvE2513wTta4&e=xEmOjV",
+  "eng|Basic design": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Basic%20Design.aspx?d=w03f1b0ef6b6d4b82a70ac0be7cb582c5&csf=1&web=2&share=IQDvsPEDbWuCS6cKwL58tYLFAdKcQcthMwFTuUY1UVCgQiY&e=kPm3Rv",
+  "mfg|Batch size": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Batch%20Size%20(manufacturing).aspx?d=w52ea6dab18824df3bde92b193296f5aa&csf=1&web=2&share=IQCrbepSghjzTb3pKxkylvWqARI5T0-uen3_VrREXPXTfEQ&e=dT78ys",
+  "margin|Batch size": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Batch%20Size%20(Sales%20Margin).aspx?d=w6e5c18aaed2b4ff78ed15a3ca87c27c0&csf=1&web=2&share=IQCqGFxuK-33T47RWjyofCfAAYAibywLA_x5tn7BS_wvtC8&e=oWq9CM",
+  "mfg|Cleaning": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Cleaning.aspx?d=w80c7335fa04d4fcfbe7e2adf9e209899&csf=1&web=2&share=IQBfM8eATaDPT75-Kt-eIJiZAX6v8x-rO3ArygZmaUkhAA8&e=oEUrEH",
+  "std|Commonality": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Commonality.aspx?d=we62d4c12bebb48ce9e3226754504ddf0&csf=1&web=2&share=IQASTC3mu77OSJ4yJnVFBN3wAcz7fmOJVKMfG7Er5apXUGg&e=Bfp795",
+  "eng|Concept design": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Concept%20Design.aspx?d=wd8e39080876e4ce089c2fc4f88a76010&csf=1&web=2&share=IQCAkOPYbofgTInC_E-Ip2AQAeJ4982vdxZA59F_pYzcVi4&e=YeT8Rf",
+  "eng|Detailed design": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Detailed%20Design.aspx?d=w05c439bca3d2429c9de04ccca6eb7bfe&csf=1&web=2&share=IQC8OcQF0qOcQp3gTMym63v-AV3rdnj6ZIFqkNM9-ZUuFR8&e=yCj0d3",
+  "int|Instruction and training": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Instruction%20%26%20Training.aspx?d=wd44289c18a5048e7882ba0ef75716f64&csf=1&web=2&share=IQDBiULUUIrnSIgroO91cW9kAfcXkVaJBc7ato7GpIgMyoU&e=ulVAnH",
+  "mfg|Machine type": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Machine-Type.aspx?d=wa192638a6b004acb95a3f9f877be9336&csf=1&web=2&share=IQCKY5KhAGvLSpWj-fh3vpM2AR3yfaiWMfwvtNXww6K152I&e=bxtAXT",
+  "mfg|Machining techniques": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Machining-Techniques.aspx?d=w49338c79e0d84e4a9e1acc932a110b24&csf=1&web=2&share=IQB5jDNJ2OBKTp4azJMqEQskAZL88tNfOoTXynT8-uddGxs&e=ImnZno",
+  "int|Manual": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Manual.aspx?d=we4f23db6bef4427690b00a554d5163fd&csf=1&web=2&share=IQC2PfLk9L52QpCwClVNUWP9AdPkRjpDJS08y0TTYeJgjlU&e=Vtyn9X",
+  "std|Obsolete products": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Obsolete%20Products.aspx?d=w7ff044855cc847b38fef0dbe559ed379&csf=1&web=2&share=IQCFRPB_yFyzR4_vDb5VntN5AZfyqMBMesB0wdRzCOKil2Q&e=6QpovU",
+  "mfg|One stop Shop": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20One-Stop-Shop.aspx?d=w3f429889fa994f57a5934f8d98a43d02&csf=1&web=2&share=IQCJmEI_mfpXT6WTT42YpD0CAdWVIq9WSMIlevmyRT7yE_s&e=8I5fIO",
+  "mfg|Outsourcing": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Outsourcing.aspx?d=w036a18c4b6aa4441a8d70a36fa29416c&csf=1&web=2&share=IQDEGGoDqrZBRKjXCjb6KUFsAVWYhx2Wi4LdZwb85RuqdWg&e=VRxz33",
+  "mfg|Post Treatments": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Post-Treatments.aspx?d=w1105a15b0bd948bda5da03488447411a&csf=1&web=2&share=IQBboQUR2Qu9SKXaA0iER0EaAfIhiWRxGF9ibiflf01Dr6M&e=QccO1q",
+  "mfg|Quality": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Quality.aspx?d=w24562c85d80745ea849f9a03a272edca&csf=1&web=2&share=IQCFLFYkB9jqRYSfmgOicu3KAXXzc7d4i_WT7N53fGcpUus&e=Iz74wA",
+  "margin|Accuracy and Tolerances": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Required-Accuracy.aspx?d=w0e6300b3746442b6ae6b8101afc5479a&csf=1&web=2&share=IQCzAGMOZHS2Qq5rgQGvxUeaATiHekZVLK5WEoVNHINTP1w&e=PQggKL",
+  "mfg|Accuracy and Tolerances": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Required-Accuracy.aspx?d=w0e6300b3746442b6ae6b8101afc5479a&csf=1&web=2&share=IQCzAGMOZHS2Qq5rgQGvxUeaATiHekZVLK5WEoVNHINTP1w&e=PQggKL",
+  "int|Safety": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Safety.aspx?d=wdeb46ef8a59740338f9cacffb83020df&csf=1&web=2&share=IQD4brTel6UzQI-crP-4MCDfAbb96oIkhrx0--iqHTSR4E4&e=2ATbVO",
+  "int|Serviceability": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Serviceability.aspx?d=w47228034364e49f3a1d86a2d382a959f&csf=1&web=2&share=IQA0gCJHTjbzSaHYai04KpWfAdyZ004S6B4SBZugYWqOSGc&e=e14WDJ",
+  "std|Standard parts": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Standard%20Parts.aspx?d=we1b7e81f4eae4b7b8a633fc1c03bce9e&csf=1&web=2&share=IQAf6Lfhrk57S4pjP8HAO86eAbzkURysXT3iqFs3GTBkcoI&e=7XElMr",
+  "margin|Supply chain": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Supply%20Chain.aspx?d=w887445b2774449f3a1a5ca8d6f46cac7&csf=1&web=2&share=IQCyRXSIRHfzSaGlyo1vRsrHAWPWe_mVf2QOtXblE7aNdyw&e=T1BAE6",
+  "int|Testing": "https://viroprod.sharepoint.com/:u:/r/sites/KP-MechanicalEngineering/SitePages/CoGA%20-%20Testing.aspx?d=wba0ebdf4a2ca4138888edf87c997111f&csf=1&web=2&share=IQD0vQ66yqI4QYiO34fJlxEfAfOBRCTA4hYIcbXORUZNAb8&e=Ag6Ko8"
+  };
+
 
   // ---- geometry ----
   var rowH = [0, 0, 0];
@@ -322,7 +354,20 @@ svg { display: block; width: 100%; height: 100%; min-width: 980px; }
 
     p.chips.forEach(function (c) {
       var b = c.box;
-      var cg = el("g", { "class": "chip t-" + c[3] }, g);
+      var url = chipLinks[p.key + "|" + c[2]];
+      var cg = el("g", { "class": "chip t-" + c[3] + (url ? " link" : "") }, g);
+      if (url) {
+        cg.setAttribute("tabindex", "0");
+        cg.setAttribute("role", "link");
+        cg.setAttribute("aria-label", c[2]);
+        cg.addEventListener("click", function () { window.open(url, "_blank", "noopener,noreferrer"); });
+        cg.addEventListener("keydown", function (event) {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            window.open(url, "_blank", "noopener,noreferrer");
+          }
+        });
+      }
       el("rect", { x: b.x, y: b.y, width: b.w, height: b.h, rx: b.h / 2 }, cg);
       var t = el("text", { "class": "chip-t", x: b.x + b.w / 2, y: b.y + b.h / 2, dy: "0.34em" }, cg);
       t.textContent = c[2];
