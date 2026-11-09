@@ -15,19 +15,18 @@
   --panel-line: #d3dde7;
   --ink: #14232f;
   --muted: #5b6c7a;
-  --blue-chip: #e1f1fb;
-  --blue-chip-line: #74b8e0;
-  --green-chip: #e8f5d9;
-  --green-chip-line: #8ec84e;
   --amber-chip: #ffe6a0;
   --amber-chip-line: #d93636;
-  --hub-blue: #1b5f8e;
-  --hub-green: #2d7a24;
   --hub-ink: #ffffff;
   --arrow: #d92222;
-  --dev-line: #2a9de0;
-  --dev-fill: rgba(42, 157, 224, 0.07);
-  --dev-a: #16608f;
+  /* Group families: Development = teal, Realization = blue, Business = purple.
+     Chips use the group tint; every hub has its own shade within the family. */
+  --dev-tint: #d3ede9;  --dev-edge: #2f9a8e; --dev-hub: #14857b;
+  --real-tint: #d9eaf8; --real-edge: #4a97cc; --real-hub: #1b5f8e;
+  --biz-tint: #e6dcf4;  --biz-edge: #8461b8; --biz-hub: #6a4a9e;
+  --dev-line: #1a8a82;
+  --dev-fill: rgba(26, 138, 130, 0.07);
+  --dev-a: #0b5b56;
   --shadow: drop-shadow(0 1px 1px rgba(20, 40, 60, 0.06)) drop-shadow(0 6px 14px rgba(20, 40, 60, 0.07));
   --font-display: "Barlow Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
   --font-body: "Barlow", "Helvetica Neue", Arial, sans-serif;
@@ -39,18 +38,15 @@
     --panel-line: #24323d;
     --ink: #e6eff5;
     --muted: #8fa2b0;
-    --blue-chip: #1b3a4e;
-    --blue-chip-line: #4ba4d8;
-    --green-chip: #243d1c;
-    --green-chip-line: #7dbd47;
     --amber-chip: #5a4500;
     --amber-chip-line: #ff6b6b;
-    --hub-blue: #2a78b0;
-    --hub-green: #3b8a2a;
     --arrow: #ff5a5a;
-    --dev-line: #44b1f0;
-    --dev-fill: rgba(68, 177, 240, 0.08);
-    --dev-a: #86cdf5;
+    --dev-tint: #1a3a36;  --dev-edge: #3fa89c; --dev-hub: #22998f;
+    --real-tint: #1b3a4e; --real-edge: #4ba4d8; --real-hub: #2a78b0;
+    --biz-tint: #2e2447;  --biz-edge: #9d7fd6; --biz-hub: #7f5dbb;
+    --dev-line: #44c0b3;
+    --dev-fill: rgba(68, 192, 179, 0.08);
+    --dev-a: #7fdcd2;
     --shadow: none;
     color-scheme: dark;
   }
@@ -61,18 +57,15 @@
   --panel-line: #24323d;
   --ink: #e6eff5;
   --muted: #8fa2b0;
-  --blue-chip: #1b3a4e;
-  --blue-chip-line: #4ba4d8;
-  --green-chip: #243d1c;
-  --green-chip-line: #7dbd47;
   --amber-chip: #5a4500;
   --amber-chip-line: #ff6b6b;
-  --hub-blue: #2a78b0;
-  --hub-green: #3b8a2a;
   --arrow: #ff5a5a;
-  --dev-line: #44b1f0;
-  --dev-fill: rgba(68, 177, 240, 0.08);
-  --dev-a: #86cdf5;
+  --dev-tint: #1a3a36;  --dev-edge: #3fa89c; --dev-hub: #22998f;
+  --real-tint: #1b3a4e; --real-edge: #4ba4d8; --real-hub: #2a78b0;
+  --biz-tint: #2e2447;  --biz-edge: #9d7fd6; --biz-hub: #7f5dbb;
+  --dev-line: #44c0b3;
+  --dev-fill: rgba(68, 192, 179, 0.08);
+  --dev-a: #7fdcd2;
   --shadow: none;
   color-scheme: dark;
 }
@@ -103,8 +96,10 @@ svg { display: block; width: 100%; height: 100%; min-width: 980px; }
 .cl { transition: opacity 0.15s; }
 .panel { fill: var(--panel); stroke: var(--panel-line); stroke-width: 1.5; filter: var(--shadow); }
 .hub rect { stroke: none; }
-.hub.t-b rect { fill: var(--hub-blue); }
-.hub.t-g rect { fill: var(--hub-green); }
+.hub rect { fill: var(--hub); }
+.g-dev { --tint: var(--dev-tint); --edge: var(--dev-edge); --hub: var(--dev-hub); }
+.g-real { --tint: var(--real-tint); --edge: var(--real-edge); --hub: var(--real-hub); }
+.g-biz { --tint: var(--biz-tint); --edge: var(--biz-edge); --hub: var(--biz-hub); }
 .hub:focus { outline: none; }
 .hub { cursor: pointer; }
 .hub:focus-visible rect { stroke: var(--ink); stroke-width: 3; }
@@ -118,9 +113,7 @@ svg { display: block; width: 100%; height: 100%; min-width: 980px; }
   pointer-events: none;
 }
 .chip rect { stroke-width: 1.8; }
-.chip.t-b rect { fill: var(--blue-chip); stroke: var(--blue-chip-line); }
-.chip.t-g rect { fill: var(--green-chip); stroke: var(--green-chip-line); }
-.chip.t-a rect { fill: var(--amber-chip); stroke: var(--amber-chip-line); stroke-width: 2.2; }
+.chip rect { fill: var(--tint); stroke: var(--edge); }
 .chip:hover rect { stroke-width: 2.6; }
 .chip-t {
   font-family: var(--font-display);
@@ -175,29 +168,29 @@ svg { display: block; width: 100%; height: 100%; min-width: 980px; }
 
   // chip = [column (0 left, 1 right), row (1-based), label, type (b blue, g green, a amber), optional id]
   var panels = [
-    { key: "pm", col: 0, row: 0, hub: "Project Management", type: "b", stretch: false, chips: [] },
-    { key: "spec", col: 1, row: 0, hub: "Specification", type: "b", chips: [
+    { key: "spec", grp: "dev", col: 0, row: 0, hub: "Specification", type: "b", chips: [
       [0,1,"Challenge","b"], [0,2,"Problem statement","b"], [0,3,"Functional fulfillment","b"],
       [1,1,"Completeness","b"], [1,2,"Feasability","b"] ] },
-    { key: "margin", col: 2, row: 0, hub: "Sales Margin", type: "b", chips: [
-      [0,1,"Accuracy","g","acc1"],
+    { key: "pm", grp: "biz", col: 1, row: 0, hub: "Project Management", type: "b", stretch: false, chips: [] },
+    { key: "margin", grp: "biz", col: 2, row: 0, hub: "Sales Margin", type: "b", chips: [
+      [0,1,"Accuracy and Tolerances","g","acc1"],
       [1,1,"Supply chain","b"], [1,2,"Batch size","b"] ] },
-    { key: "std", col: 0, row: 1, hub: "Standard Components", type: "b", chips: [
-      [0,1,"Leadtime","b"], [0,2,"End of Life","b"], [0,3,"Availability","b"], [0,4,"Standard parts","g"],
+    { key: "std", grp: "dev", col: 0, row: 1, hub: "Standard Components", type: "b", chips: [
+      [0,1,"Leadtime","b"], [0,2,"Obsolete products","b"], [0,3,"Availability and suppliers","b"], [0,4,"Standard parts","g"],
       [1,1,"Where to buy / look","b"], [1,2,"Commonality","g","commonality"], [1,3,"Catalogue parts","b"] ] },
-    { key: "eng", col: 1, row: 1, hub: "Engineering", type: "g", chips: [
+    { key: "eng", grp: "dev", col: 1, row: 1, hub: "Engineering", type: "g", chips: [
       [0,1,"Concept design","g","concept"], [0,2,"Detailed design","g","detailed"], [0,3,"Basic design","g","basic"],
       [1,1,"TPD","g"], [1,2,"Review","g"], [1,3,"Cost estimate","g"], [1,4,"Sustainability","g"], [1,5,"Circular design","g"] ] },
-    { key: "mfg", col: 2, row: 1, hub: "Manufacturing", type: "b", chips: [
+    { key: "mfg", grp: "real", col: 2, row: 1, hub: "Manufacturing", type: "b", chips: [
       [0,1,"Machine type","b","machine"], [0,2,"One stop Shop","b"], [0,3,"Quality","b"], [0,4,"Post Treatments","g"], [0,5,"Machining techniques","g","machining"],
-      [1,1,"Outsourcing","b","outsourcing"], [1,2,"Cleaning","g"], [1,3,"Accuracy","g"], [1,4,"Batch size","b","batch_m"] ] },
-    { key: "int", col: 0, row: 2, hub: "Integration", type: "g", chips: [
+      [1,1,"Outsourcing","b","outsourcing"], [1,2,"Cleaning","g"], [1,3,"Accuracy and Tolerances","g"], [1,4,"Batch size","b","batch_m"] ] },
+    { key: "int", grp: "real", col: 0, row: 2, hub: "Integration", type: "g", chips: [
       [0,1,"Safety","g"], [0,2,"CE","a"], [0,3,"Manual","a"],
-      [1,1,"Serviceability","g","serv"], [1,2,"Instruction / Education","g"], [1,3,"Test plan","g"] ] },
-    { key: "asm", col: 1, row: 2, hub: "Assembly", type: "g", chips: [
+      [1,1,"Serviceability","g","serv"], [1,2,"Instruction and training","g"], [1,3,"Testing","g"] ] },
+    { key: "asm", grp: "real", col: 1, row: 2, hub: "Assembly", type: "g", chips: [
       [0,1,"BOM structure","g","bom"], [0,2,"Assembly / Installation","g","install"],
       [1,1,"Qualification / Testing","g"], [1,2,"Packaging","g"] ] },
-    { key: "raw", col: 2, row: 2, hub: "Raw Materials", type: "b", chips: [
+    { key: "raw", grp: "real", col: 2, row: 2, hub: "Raw Materials", type: "b", chips: [
       [0,1,"Purchase dimensions","g","purchase"], [0,2,"Availability / Leadtime","b"],
       [1,1,"Batch size","b","batch_r"], [1,2,"Tolerances","b"] ] }
   ];
@@ -289,11 +282,11 @@ svg { display: block; width: 100%; height: 100%; min-width: 980px; }
   el("path", {
     "class": "dev",
     d: roundedPath([
-      [xB - d0, y1 - d0], [rightB + d0, y1 - d0], [rightB + d0, yBottom + d0],
-      [xA - d0, yBottom + d0], [xA - d0, y2 - d0], [xB - d0, y2 - d0]
+      [xA - d0, y1 - d0], [xA + G.panelW + d0, y1 - d0], [xA + G.panelW + d0, y2 - d0],
+      [rightB + d0, y2 - d0], [rightB + d0, yBottom + d0], [xA - d0, yBottom + d0]
     ], 30)
   }, regionLayer);
-  var labelX = xA + 190, labelY = y2 - d0;
+  var labelX = (xA + G.panelW + xB + G.panelW) / 2, labelY = y2 - d0;
   var labelBg = el("rect", { "class": "dev-bg", x: labelX - 190, y: labelY - 13, width: 380, height: 26, rx: 4 }, regionLayer);
   var label = el("text", { "class": "dev-t", x: labelX, y: labelY + 6 }, regionLayer);
   var la = el("tspan", { "class": "dev-a" }, label); la.textContent = "Development ";
@@ -304,7 +297,7 @@ svg { display: block; width: 100%; height: 100%; min-width: 980px; }
   var fitList = [];
   var clusters = {};
   panels.forEach(function (p) {
-    var g = el("g", { "class": "cl", "data-c": p.key }, clusterLayer);
+    var g = el("g", { "class": "cl g-" + p.grp, "data-c": p.key }, clusterLayer);
     clusters[p.key] = g;
     el("rect", { "class": "panel", x: p.x, y: p.y, width: p.w, height: p.h, rx: 22 }, g);
 
@@ -346,7 +339,7 @@ svg { display: block; width: 100%; height: 100%; min-width: 980px; }
   var laneH = xC - 42, laneR = xC + G.panelW + 20;
   var yGap = P.eng.y + P.eng.h + G.gapY / 2;
 
-  var cn = Lm(K.concept), sp = Lm(P.spec.hubBox);
+  var cn = Lm(K.concept), sp = Rm(P.spec.hubBox);
   var cm = Rm(K.commonality), dt = Lm(K.detailed), bs = Lm(K.basic);
   var eh = Rm(P.eng.hubBox), mt = Lm(K.machine), ac = Lm(K.acc1);
   var mh = Rm(P.margin.hubBox), os = Rm(K.outsourcing);
